@@ -29,7 +29,7 @@ SELECT cars.type, cars.cost, cars.model, make.name
   FROM cars
   INNER JOIN make ON (cars.make_id = make.id)
   ORDER BY cost DESC  LIMIT 30;
-  
+
 CREATE VIEW toyotas AS
 SELECT cars.type, cars.cost, cars.model, make.name
   FROM cars

@@ -16,15 +16,44 @@ router.get('/', async (req: Request, res: Response) => {
     res.send(items);
 });
 
-//@TODO
-//Add an endpoint to GET a specific resource by Primary Key
+// GET a specific resource by Primary Key
+router.get('/:id', async (req: Request, res: Response) => {
+    let { id } = req.params;
+    const item = await FeedItem.findByPk(id);
+    if (!item) {
+        res.status(400).send("feed not found");
+    }
+    res.status(200).send(item);
+});
 
 // update a specific resource
 router.patch('/:id', 
     requireAuth, 
     async (req: Request, res: Response) => {
-        //@TODO try it yourself
-        res.send(500).send("not implemented")
+        // get the caption and filename from the request body, id from param
+        let { id } = req.params;
+        const caption = req.body.caption;
+        const fileName = req.body.url;
+
+        // check Caption is valid
+        if (!caption) {
+            return res.status(400).send({ message: 'Caption is required or malformed' });
+        }
+
+        // check Filename is valid
+        if (!fileName) {
+            return res.status(400).send({ message: 'File url is required' });
+        }
+
+        const item = await FeedItem.findByPk(id);
+        if (!item) {
+            return res.status(400).send({ message: 'Resource to update not found' });
+        }
+
+        item.caption = caption;
+        item.url = fileName;
+
+        res.send(200).send(item);
 });
 
 
